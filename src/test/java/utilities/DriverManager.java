@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DriverManager {
-    private final boolean runServer = System.getenv("Run Tests and Generate Allure Report") != null;
+    private final boolean runServer = System.getenv("Run Tests and Generate Cucumber Report") != null;
 
     public void buildDriver() {
         if (runServer) {
