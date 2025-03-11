@@ -1,0 +1,149 @@
+21:17:24.599 INFO  AUTOMATION - beforeAll
+21:17:24.608 DEBUG AUTOMATION - Deleting previous evidence
+21:17:24.660 INFO  AUTOMATION - before: io.cucumber.java.Scenario@408b35bf
+21:17:24.660 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:17:25.847 DEBUG AUTOMATION - Maximizando la pantalla
+21:17:25.869 DEBUG AUTOMATION - Borrando las cookies
+21:17:25.875 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:17:30.318 INFO  AUTOMATION - Enter the user email
+21:17:30.367 INFO  AUTOMATION - Enter the user password
+21:17:30.403 INFO  AUTOMATION - Click on login button
+21:17:34.050 INFO  AUTOMATION - after: As a user, I want to verify the Contact Us page, status: PASSED
+21:17:34.050 DEBUG AUTOMATION - Matando el driver
+21:17:35.166 INFO  AUTOMATION - before: io.cucumber.java.Scenario@f0c1ae1
+21:17:35.166 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:17:35.896 DEBUG AUTOMATION - Maximizando la pantalla
+21:17:35.917 DEBUG AUTOMATION - Borrando las cookies
+21:17:35.921 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:17:39.304 INFO  AUTOMATION - Enter the user email
+21:17:39.352 INFO  AUTOMATION - Enter the user password
+21:17:39.386 INFO  AUTOMATION - Click on login button
+21:17:42.243 INFO  AUTOMATION - after: As a user, I want to submit a message, status: PASSED
+21:17:42.243 DEBUG AUTOMATION - Matando el driver
+21:17:43.339 INFO  AUTOMATION - before: io.cucumber.java.Scenario@2f42f20f
+21:17:43.340 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:17:44.105 DEBUG AUTOMATION - Maximizando la pantalla
+21:17:44.124 DEBUG AUTOMATION - Borrando las cookies
+21:17:44.128 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:17:47.967 INFO  AUTOMATION - Enter the user email
+21:17:48.031 INFO  AUTOMATION - Enter the user password
+21:17:48.065 INFO  AUTOMATION - Click on login button
+21:17:52.703 INFO  AUTOMATION - after: As a user, I want to verify the item details page, status: PASSED
+21:17:52.703 DEBUG AUTOMATION - Matando el driver
+21:17:53.796 INFO  AUTOMATION - before: io.cucumber.java.Scenario@1d5ada5a
+21:17:53.796 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:17:54.568 DEBUG AUTOMATION - Maximizando la pantalla
+21:17:54.588 DEBUG AUTOMATION - Borrando las cookies
+21:17:54.592 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:17:57.935 INFO  AUTOMATION - Enter the user email
+21:17:57.978 INFO  AUTOMATION - Enter the user password
+21:17:58.012 INFO  AUTOMATION - Click on login button
+21:18:02.567 INFO  AUTOMATION - after: As a user, I want to, status: PASSED
+21:18:02.567 DEBUG AUTOMATION - Matando el driver
+21:18:03.659 INFO  AUTOMATION - before: io.cucumber.java.Scenario@44de051c
+21:18:03.659 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:18:04.386 DEBUG AUTOMATION - Maximizando la pantalla
+21:18:04.406 DEBUG AUTOMATION - Borrando las cookies
+21:18:04.410 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:18:37.170 INFO  AUTOMATION - after: As a user, I want to verify the login page, status: PASSED
+21:18:37.170 DEBUG AUTOMATION - Matando el driver
+21:18:38.268 INFO  AUTOMATION - before: io.cucumber.java.Scenario@3677a08a
+21:18:38.268 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:18:39.049 DEBUG AUTOMATION - Maximizando la pantalla
+21:18:39.069 DEBUG AUTOMATION - Borrando las cookies
+21:18:39.073 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:18:42.579 INFO  AUTOMATION - Enter the user email
+21:18:42.623 INFO  AUTOMATION - Enter the user password
+21:18:42.655 INFO  AUTOMATION - Click on login button
+21:18:43.861 INFO  AUTOMATION - after: As a user, I want to login into the website, status: PASSED
+21:18:43.861 DEBUG AUTOMATION - Matando el driver
+21:18:44.961 INFO  AUTOMATION - before: io.cucumber.java.Scenario@69275b11
+21:18:44.962 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:18:45.742 DEBUG AUTOMATION - Maximizando la pantalla
+21:18:45.762 DEBUG AUTOMATION - Borrando las cookies
+21:18:45.766 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:18:49.283 INFO  AUTOMATION - Enter the user email
+21:18:49.324 INFO  AUTOMATION - Enter the user password
+21:18:49.357 INFO  AUTOMATION - Click on login button
+21:18:53.818 INFO  AUTOMATION - after: As a user, I want to ensure my cart is empty, status: PASSED
+21:18:53.818 DEBUG AUTOMATION - Matando el driver
+21:18:54.919 INFO  AUTOMATION - before: io.cucumber.java.Scenario@2546ec60
+21:18:54.919 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:18:55.648 DEBUG AUTOMATION - Maximizando la pantalla
+21:18:55.668 DEBUG AUTOMATION - Borrando las cookies
+21:18:55.673 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:18:59.615 INFO  AUTOMATION - Enter the user email
+21:18:59.672 INFO  AUTOMATION - Enter the user password
+21:18:59.710 INFO  AUTOMATION - Click on login button
+21:19:05.600 INFO  AUTOMATION - after: As a user, I want to add items on my shopping cart, status: PASSED
+21:19:05.601 DEBUG AUTOMATION - Matando el driver
+21:19:06.702 INFO  AUTOMATION - before: io.cucumber.java.Scenario@12fc2d6
+21:19:06.702 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:07.473 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:07.492 DEBUG AUTOMATION - Borrando las cookies
+21:19:07.495 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:19:11.390 INFO  AUTOMATION - Enter the user email
+21:19:11.444 INFO  AUTOMATION - Enter the user password
+21:19:11.480 INFO  AUTOMATION - Click on login button
+21:19:14.602 INFO  AUTOMATION - after: As a user, I want to verify the products page, status: PASSED
+21:19:14.602 DEBUG AUTOMATION - Matando el driver
+21:19:15.702 INFO  AUTOMATION - before: io.cucumber.java.Scenario@3eb9f22b
+21:19:15.702 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:16.429 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:16.449 DEBUG AUTOMATION - Borrando las cookies
+21:19:16.452 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:19:20.018 INFO  AUTOMATION - Enter the user email
+21:19:20.061 INFO  AUTOMATION - Enter the user password
+21:19:20.097 INFO  AUTOMATION - Click on login button
+21:19:22.671 INFO  AUTOMATION - after: As a user, I want to verify the items price, status: PASSED
+21:19:22.671 DEBUG AUTOMATION - Matando el driver
+21:19:23.769 INFO  AUTOMATION - before: io.cucumber.java.Scenario@c5318fe
+21:19:23.769 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:24.553 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:24.572 DEBUG AUTOMATION - Borrando las cookies
+21:19:24.577 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:19:36.310 INFO  AUTOMATION - Enter the user email
+21:19:36.353 INFO  AUTOMATION - Enter the user password
+21:19:36.386 INFO  AUTOMATION - Click on login button
+21:19:39.127 INFO  AUTOMATION - after: As a user, I want to verify the items price, status: PASSED
+21:19:39.127 DEBUG AUTOMATION - Matando el driver
+21:19:40.222 INFO  AUTOMATION - before: io.cucumber.java.Scenario@92c2658
+21:19:40.222 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:40.989 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:41.008 DEBUG AUTOMATION - Borrando las cookies
+21:19:41.012 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:19:44.249 INFO  AUTOMATION - Enter the user email
+21:19:44.294 INFO  AUTOMATION - Enter the user password
+21:19:44.326 INFO  AUTOMATION - Click on login button
+21:19:46.999 INFO  AUTOMATION - after: As a user, I want to verify the items price, status: PASSED
+21:19:46.999 DEBUG AUTOMATION - Matando el driver
+21:19:48.084 INFO  AUTOMATION - before: io.cucumber.java.Scenario@6c3a5ffa
+21:19:48.085 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:48.855 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:48.876 DEBUG AUTOMATION - Borrando las cookies
+21:19:48.880 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:19:51.921 INFO  AUTOMATION - Enter the user email
+21:19:51.964 INFO  AUTOMATION - Enter the user password
+21:19:51.995 INFO  AUTOMATION - Click on login button
+21:19:54.663 INFO  AUTOMATION - after: As a user, I want to verify the items price, status: PASSED
+21:19:54.664 DEBUG AUTOMATION - Matando el driver
+21:19:55.754 INFO  AUTOMATION - before: io.cucumber.java.Scenario@70b0961
+21:19:55.754 DEBUG AUTOMATION - Inicializando el driver: EDGE
+21:19:56.525 DEBUG AUTOMATION - Maximizando la pantalla
+21:19:56.543 DEBUG AUTOMATION - Borrando las cookies
+21:19:56.547 DEBUG AUTOMATION - Asignando driver al webdriver provider
+21:20:00.107 INFO  AUTOMATION - Enter the username
+21:20:00.147 INFO  AUTOMATION - Enter the email address
+21:20:00.184 INFO  AUTOMATION - Click on Sign up button
+21:20:02.120 INFO  AUTOMATION - Select gender
+21:20:02.229 INFO  AUTOMATION - Verify username & email pre-registered values
+21:20:02.252 INFO  AUTOMATION - Enter password
+21:20:02.301 INFO  AUTOMATION - Select date of birth
+21:20:02.514 INFO  AUTOMATION - Checkmark the checkboxes
+21:20:02.601 INFO  AUTOMATION - Enter first name, last name, company, main address & secondary address
+21:20:02.824 INFO  AUTOMATION - Select country
+21:20:02.872 INFO  AUTOMATION - Enter state, city, zipcode & phone number
+21:20:03.074 INFO  AUTOMATION - Click on create account button
+21:20:05.068 INFO  AUTOMATION - after: As a new user, I want to sign up on the website, status: PASSED
+21:20:05.068 DEBUG AUTOMATION - Matando el driver
+21:20:06.172 INFO  AUTOMATION - beforeAll
