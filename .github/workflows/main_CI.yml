@@ -40,11 +40,6 @@ jobs:
           ./mvnw clean test -Dgroups="regression" -Dbrowser="chrome" -Dheadless
           echo "Test execution finished with exit code $?"
 
-      - name: Generate Cucumber Report
-        run: |
-          chmod +x openReport.sh
-          ./openReport.sh
-
       - name: Upload Cucumber Report as Artifact
         uses: actions/upload-artifact@v4
         with:
