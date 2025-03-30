@@ -1,4 +1,4 @@
-# Cyanfy-SkillDemo
+# Cyanfy-Selenium_SkillDemo
 
 ## Overview
 "Cyanfy-SkillDemo" is a project designed to demonstrate QA Automation expertise in Java, Selenium, BDD, Cucumber, Gherkin, CI/CD integration and agile testing. It enhances test readability and collaboration using Cucumber and Gherkin.
