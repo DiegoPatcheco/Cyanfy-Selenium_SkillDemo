@@ -1,56 +1,81 @@
-name: CI Pipeline
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run Tests and Generate Cucumber Report
+  compile:
+    name: Compile test automation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - name: Checkout Repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17 with Maven
+      - name: Set up Amazon Corretto 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
-          java-version: '17'
-          cache: 'maven'
+          distribution: corretto
+          java-version: "17"
+          cache: maven
 
-      - name: Verify Maven Installation
-        run: |
-          mvn -version
-          which mvn
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
 
-      - name: Cache Maven Dependencies
-        uses: actions/cache@v4
+      - name: Compile test sources
+        run: ./mvnw --batch-mode --no-transfer-progress test-compile -DskipTests
+
+  web-smoke:
+    name: Run Chrome headless smoke
+    needs: compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Amazon Corretto 17
+        uses: actions/setup-java@v4
         with:
-          path: ~/.m2
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: maven-${{ runner.os }}
+          distribution: corretto
+          java-version: "17"
+          cache: maven
 
-      - name: Run Tests
-        run: |
-          chmod +x mvnw
-          ./mvnw clean test -Dgroups="regression" -Dbrowser="chrome" -Dheadless
-          echo "Test execution finished with exit code $?"
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
 
-      - name: Upload Cucumber Report as Artifact
+      - name: Run real web smoke
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress clean test
+          -Dtest=RunTests
+          "-Dcucumber.filter.name=.*verify.the.login.page.*"
+          -Dbrowser=chrome
+          -DexecutionMode=local
+          -Dheadless
+
+      - name: Upload test reports and failure evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cucumber-report
-          path: target/cucumber-reports
-
-      - name: Publish Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: target/surefire-reports
-
-      - name: Display Cucumber Report Path
-        run: echo "Cucumber Report is available in the CI/CD artifacts."
+          name: web-smoke-results-${{ github.run_attempt }}
+          path: |
+            target/cucumber/
+            target/cucumber-reports/
+            target/cucumber-html-reports/
+            target/surefire-reports/
+            target/evidence/
+          if-no-files-found: warn
+          retention-days: 14
