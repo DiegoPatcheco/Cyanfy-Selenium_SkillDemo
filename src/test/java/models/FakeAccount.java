@@ -1,8 +1,6 @@
 package models;
 
-import com.github.javafaker.Company;
 import com.github.javafaker.Faker;
-import com.github.javafaker.PhoneNumber;
 
 public class FakeAccount {
     private final String username;
@@ -10,25 +8,25 @@ public class FakeAccount {
     private final String password;
     private final String name;
     private final String lastName;
-    private final Company company;
+    private final String company;
     private final String address;
     private final String altAddress;
     private final String state;
     private final String city;
     private final String zipcode;
-    private final PhoneNumber phoneNumber;
+    private final String phoneNumber;
     private final String subject;
     private final String message;
 
     public FakeAccount() {
         final var faker = new Faker();
-        phoneNumber = faker.phoneNumber();
+        phoneNumber = faker.phoneNumber().cellPhone();
         zipcode = faker.address().zipCode();
         city = faker.address().city();
         state = faker.address().state();
         altAddress = faker.address().secondaryAddress();
         address = faker.address().streetAddress();
-        company = faker.company();
+        company = faker.company().name();
         lastName = faker.name().lastName();
         name = faker.name().firstName();
         password = faker.internet().password();
@@ -58,7 +56,7 @@ public class FakeAccount {
         return lastName;
     }
 
-    public Company getCompany() {
+    public String getCompany() {
         return company;
     }
 
@@ -82,7 +80,7 @@ public class FakeAccount {
         return zipcode;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 

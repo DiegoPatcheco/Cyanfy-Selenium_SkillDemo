@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.Select;
 import utilities.BasePage;
 import utilities.Logs;
 
+import java.time.LocalDate;
+
 public class AccountInfoPage extends BasePage {
     private final By accountInfoTitle = By.xpath("//b[text()='Enter Account Information']");
     private final By maleGenderRadioButton = By.id("id_gender1");
@@ -56,8 +58,8 @@ public class AccountInfoPage extends BasePage {
 
         Logs.info("Verify username & email pre-registered values");
         Assertions.assertAll(
-                () -> Assertions.assertEquals(username, find(userNameInput).getAttribute("value")),
-                () -> Assertions.assertEquals(email, find(emailInput).getAttribute("value"))
+                () -> Assertions.assertEquals(username, find(userNameInput).getDomProperty("value")),
+                () -> Assertions.assertEquals(email, find(emailInput).getDomProperty("value"))
         );
 
         Logs.info("Enter password");
@@ -67,9 +69,10 @@ public class AccountInfoPage extends BasePage {
         final var daySelect = new Select(find(birthDayDropdown));
         final var monthSelect = new Select(find(birthMonthDropdown));
         final var yearSelect = new Select(find(birthYearDropdown));
-        daySelect.selectByValue(getRandomDayValue());
-        monthSelect.selectByValue(getRandomMonthValue());
-        yearSelect.selectByValue(getRandomYearValue());
+        final var dateOfBirth = getRandomDateOfBirth();
+        daySelect.selectByValue(String.valueOf(dateOfBirth.getDayOfMonth()));
+        monthSelect.selectByValue(String.valueOf(dateOfBirth.getMonthValue()));
+        yearSelect.selectByValue(String.valueOf(dateOfBirth.getYear()));
 
         Logs.info("Checkmark the checkboxes");
         find(newsLetterCheckbox).click();
@@ -78,7 +81,7 @@ public class AccountInfoPage extends BasePage {
         Logs.info("Enter first name, last name, company, main address & secondary address");
         find(firstNameInput).sendKeys(fakeAccount.getName());
         find(lastNameInput).sendKeys(fakeAccount.getLastName());
-        find(companyInput).sendKeys(fakeAccount.getCompany().toString());
+        find(companyInput).sendKeys(fakeAccount.getCompany());
         find(mainAddressInput).sendKeys(fakeAccount.getAddress());
         find(secondaryAddressInput).sendKeys(fakeAccount.getAltAddress());
 
@@ -90,33 +93,24 @@ public class AccountInfoPage extends BasePage {
         find(stateInput).sendKeys(fakeAccount.getState());
         find(cityInput).sendKeys(fakeAccount.getCity());
         find(zipcodeInput).sendKeys(fakeAccount.getZipcode());
-        find(phoneNumberInput).sendKeys(fakeAccount.getPhoneNumber().toString());
+        find(phoneNumberInput).sendKeys(fakeAccount.getPhoneNumber());
 
         Logs.info("Click on create account button");
         find(createAccountButton).click();
     }
 
-    private static String getRandomDayValue() {
+    private static LocalDate getRandomDateOfBirth() {
         final var faker = new Faker();
-        final var number = faker.number().numberBetween(1, 31);
-        return String.valueOf(number);
-    }
-
-    private static String getRandomMonthValue() {
-        final var faker = new Faker();
-        final var number = faker.number().numberBetween(1, 12);
-        return String.valueOf(number);
-    }
-
-    private static String getRandomYearValue() {
-        final var faker = new Faker();
-        final var number = faker.number().numberBetween(1900, 2021);
-        return String.valueOf(number);
+        final var year = faker.number().numberBetween(1900, 2022);
+        final var month = faker.number().numberBetween(1, 13);
+        final var firstDayOfMonth = LocalDate.of(year, month, 1);
+        final var day = faker.number().numberBetween(1, firstDayOfMonth.lengthOfMonth() + 1);
+        return firstDayOfMonth.withDayOfMonth(day);
     }
 
     private static String getRandomCountryValue() {
         final var faker = new Faker();
-        final var number = faker.number().numberBetween(1, 7);
+        final var number = faker.number().numberBetween(1, 8);
 
         return switch (number) {
             case 1 -> "India";
