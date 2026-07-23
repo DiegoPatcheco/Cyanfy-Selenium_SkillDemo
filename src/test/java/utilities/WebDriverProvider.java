@@ -12,4 +12,8 @@ public class WebDriverProvider {
     public WebDriver get() {
         return threadLocal.get();
     }
+
+    public void remove() {
+        threadLocal.remove();
+    }
 }

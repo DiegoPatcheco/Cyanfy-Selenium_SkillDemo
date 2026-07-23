@@ -1,6 +1,7 @@
 package utilities;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -9,121 +10,143 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 public class DriverManager {
-    private final boolean runServer = System.getenv("Run Tests and Generate Cucumber Report") != null;
+    private static final String DEFAULT_REMOTE_URL = "http://localhost:4444/wd/hub";
+    private final WebDriverProvider driverProvider = new WebDriverProvider();
 
     public void buildDriver() {
-        if (runServer) {
-            buildRemoteDriver();
-        } else {
-            buildLocalDriver();
+        final var executionMode = ExecutionMode.valueOf(
+                System.getProperty("executionMode", "LOCAL").toUpperCase(Locale.ROOT)
+        );
+        final var browser = Browser.valueOf(
+                System.getProperty("browser", "CHROME").toUpperCase(Locale.ROOT)
+        );
+        final var headlessMode = System.getProperty("headless") != null;
+
+        final var driver = switch (executionMode) {
+            case LOCAL -> buildLocalDriver(browser, headlessMode);
+            case REMOTE -> buildRemoteDriver(browser, headlessMode);
+        };
+
+        driverProvider.set(driver);
+        try {
+            configureDriver(driver, headlessMode, executionMode);
+        } catch (RuntimeException exception) {
+            killDriver();
+            throw exception;
         }
     }
 
-    private void buildRemoteDriver() {
-        final var browserProperty = System.getProperty("browser", "CHROME").toUpperCase();
-        final var headlessMode = System.getProperty("headless") != null;
-
-        Logs.debug("Inicializando driver remoto: %s", browserProperty);
-
-        final var capabilities = switch (Browser.valueOf(browserProperty)) {
+    private RemoteWebDriver buildRemoteDriver(Browser browser, boolean headlessMode) {
+        Logs.debug("Inicializando driver remoto: %s", browser);
+        final Capabilities capabilities = switch (browser) {
             case CHROME -> {
-                var options = new ChromeOptions();
+                final var options = new ChromeOptions();
                 if (headlessMode) {
-                    options.addArguments("--headless=new");
+                    configureChromiumHeadless(options);
                 }
                 yield options;
             }
             case EDGE -> {
-                var options = new EdgeOptions();
+                final var options = new EdgeOptions();
                 if (headlessMode) {
-                    options.addArguments("--headless=new");
+                    configureChromiumHeadless(options);
                 }
                 yield options;
             }
             case FIREFOX -> {
-                var options = new FirefoxOptions();
+                final var options = new FirefoxOptions();
                 if (headlessMode) {
-                    options.addArguments("--headless");
+                    options.addArguments("--headless", "--width=1920", "--height=1080");
                 }
                 yield options;
             }
-            case SAFARI -> new SafariDriver();
+            case SAFARI -> {
+                validateSafariHeadless(headlessMode);
+                yield new SafariOptions();
+            }
         };
 
         try {
-            var remoteUrl = new URL(System.getProperty("remoteUrl", "http://localhost:4444/wd/hub"));
-            var driver = new RemoteWebDriver(remoteUrl, (Capabilities) capabilities);
-
-            Logs.debug("Maximizando la pantalla en el entorno remoto");
-            driver.manage().window().maximize();
-
-            Logs.debug("Borrando las cookies en el entorno remoto");
-            driver.manage().deleteAllCookies();
-
-            Logs.debug("Asignando driver remoto al WebDriver provider");
-            new WebDriverProvider().set(driver);
-
-        } catch (MalformedURLException e) {
-            Logs.error("URL remota no válida para Selenium Grid", e);
-            throw new RuntimeException(e);
+            final URL remoteUrl = new URL(System.getProperty("remoteUrl", DEFAULT_REMOTE_URL));
+            return new RemoteWebDriver(remoteUrl, capabilities);
+        } catch (MalformedURLException exception) {
+            throw new IllegalArgumentException("Invalid Selenium Grid URL", exception);
         }
     }
 
-    private void buildLocalDriver() {
-        final var headlessMode = System.getProperty("headless") != null;
-        var browserProperty = System.getProperty("browser");
-
-        if (browserProperty == null) {
-            Logs.debug("Setting Chrome as default driver");
-            browserProperty = "CHROME";
-        }
-
-        final var browser = Browser.valueOf(browserProperty.toUpperCase());
-
-        Logs.debug("Inicializando el driver: %s", browser);
-        final var driver = switch (browser) {
+    private WebDriver buildLocalDriver(Browser browser, boolean headlessMode) {
+        Logs.debug("Inicializando el driver local: %s", browser);
+        return switch (browser) {
             case CHROME -> {
-                final var chromeOptions = new ChromeOptions();
+                final var options = new ChromeOptions();
                 if (headlessMode) {
-                    chromeOptions.addArguments("--headless=new");
+                    configureChromiumHeadless(options);
                 }
-                yield new ChromeDriver(chromeOptions);
+                yield new ChromeDriver(options);
             }
             case EDGE -> {
-                final var edgeOptions = new EdgeOptions();
+                final var options = new EdgeOptions();
                 if (headlessMode) {
-                    edgeOptions.addArguments("--headless=new");
+                    configureChromiumHeadless(options);
                 }
-                yield new EdgeDriver(edgeOptions);
+                yield new EdgeDriver(options);
             }
             case FIREFOX -> {
-                final var firefoxOptions = new FirefoxOptions();
+                final var options = new FirefoxOptions();
                 if (headlessMode) {
-                    firefoxOptions.addArguments("--headless");
+                    options.addArguments("--headless", "--width=1920", "--height=1080");
                 }
-                yield new FirefoxDriver(firefoxOptions);
+                yield new FirefoxDriver(options);
             }
-            case SAFARI -> new SafariDriver();
+            case SAFARI -> {
+                validateSafariHeadless(headlessMode);
+                yield new SafariDriver();
+            }
         };
+    }
 
-        Logs.debug("Maximizando la pantalla");
-        driver.manage().window().maximize();
+    private void configureDriver(WebDriver driver, boolean headlessMode, ExecutionMode executionMode) {
+        if (!headlessMode) {
+            Logs.debug("Maximizando la pantalla en modo %s", executionMode);
+            driver.manage().window().maximize();
+        }
 
         Logs.debug("Borrando las cookies");
         driver.manage().deleteAllCookies();
+    }
 
-        Logs.debug("Asignando driver al webdriver provider");
-        new WebDriverProvider().set(driver);
+    private void configureChromiumHeadless(ChromeOptions options) {
+        options.addArguments("--headless=new", "--window-size=1920,1080");
+    }
+
+    private void configureChromiumHeadless(EdgeOptions options) {
+        options.addArguments("--headless=new", "--window-size=1920,1080");
+    }
+
+    private void validateSafariHeadless(boolean headlessMode) {
+        if (headlessMode) {
+            throw new IllegalArgumentException("Safari does not support this framework's headless mode");
+        }
     }
 
     public void killDriver() {
-        Logs.debug("Matando el driver");
-        new WebDriverProvider().get().quit();
+        final var driver = driverProvider.get();
+
+        try {
+            if (driver != null) {
+                Logs.debug("Cerrando el driver");
+                driver.quit();
+            }
+        } finally {
+            driverProvider.remove();
+        }
     }
 
     private enum Browser {
@@ -131,5 +154,10 @@ public class DriverManager {
         FIREFOX,
         EDGE,
         SAFARI
+    }
+
+    private enum ExecutionMode {
+        LOCAL,
+        REMOTE
     }
 }

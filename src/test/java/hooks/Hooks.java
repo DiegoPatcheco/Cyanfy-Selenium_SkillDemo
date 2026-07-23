@@ -20,7 +20,7 @@ public class Hooks {
 
     @AfterAll
     public static void afterAll() {
-        Logs.info("beforeAll");
+        Logs.info("afterAll");
     }
 
     @Before
@@ -32,14 +32,15 @@ public class Hooks {
     @After
     public static void after(Scenario scenario) {
         Logs.info("after: %s, status: %s", scenario.getName(), scenario.getStatus());
-        switch (scenario.getStatus()) {
-            case FAILED, SKIPPED -> {
-                FileManager.getScreenshot(scenario.getName());
-                FileManager.getPageSource(scenario.getName());
-                FileManager.attachScreenshot(scenario);
-                FileManager.attachPageSource(scenario);
+        try {
+            switch (scenario.getStatus()) {
+                case FAILED, SKIPPED -> FileManager.captureFailureEvidence(scenario);
             }
+        } catch (RuntimeException exception) {
+            Logs.error("No fue posible capturar evidencia para %s: %s",
+                    scenario.getName(), exception.getMessage());
+        } finally {
+            driverManager.killDriver();
         }
-        driverManager.killDriver();
     }
 }
