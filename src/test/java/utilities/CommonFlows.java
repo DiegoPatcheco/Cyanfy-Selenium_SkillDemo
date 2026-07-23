@@ -2,7 +2,6 @@ package utilities;
 
 import data.DataGiver;
 import models.FakeAccount;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import pages.AccountInfoPage;
 import pages.ContactPage;
@@ -16,14 +15,6 @@ public class CommonFlows {
 
     private WebDriver getDriver() {
         return new WebDriverProvider().get();
-    }
-
-    private void assignLoginCookie() {
-        Logs.debug("Setting login cookie");
-        getDriver().get("https://www.automationexercise.com/404");
-        final var validCredentials = DataGiver.getValidCredentials();
-        final var loginCookie = new Cookie("sessionid", validCredentials.getEmail());
-        getDriver().manage().addCookie(loginCookie);
     }
 
     public String getUsername() {

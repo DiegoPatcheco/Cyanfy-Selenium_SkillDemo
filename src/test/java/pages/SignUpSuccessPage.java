@@ -21,8 +21,4 @@ public class SignUpSuccessPage extends BasePage {
                 () -> Assertions.assertTrue(find(continueButton).isDisplayed())
         );
     }
-
-    public void clickContinue() {
-        find(continueButton).click();
-    }
 }
