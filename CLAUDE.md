@@ -2,7 +2,7 @@
 
 Operational guide for working in this repository. Every statement here is derived from
 `README.md`, `pom.xml`, `.github/workflows/main_CI.yml`, the test sources under `src/test/java`,
-the Gherkin features under `src/test/resources/features`, and `runSuite.sh` / `openReport.sh`.
+the Gherkin features under `src/test/resources/features`, and `runSuite.sh`.
 If any statement below stops matching those files, trust the files and update this document.
 
 ## Purpose and architecture
@@ -150,9 +150,7 @@ equivalent script — use the PowerShell command above.
 | JUnit XML / Surefire | `target/surefire-reports/` |
 | Failure screenshots | `target/evidence/screenshots/` |
 | Failure page sources | `target/evidence/page-source/` |
-
-`openReport.sh` opens the Masterthought report with `start` (edit to `open` on macOS/Linux per the
-script's own comment).
+| Log4j2 runtime logs | `target/logs/informative.log`, `target/logs/debug.log`, `target/logs/trace.log` |
 
 ## External-site side effects and isolation limits
 
@@ -206,11 +204,13 @@ script's own comment).
 ## Generated / IDE files
 
 - `target/` is a Maven build output directory (compiled classes, reports, evidence) — never hand-edit
-  or commit files under it; let `clean`/builds manage it.
-- `.idea/` contains IntelliJ project metadata already tracked in this repo; avoid unrelated edits
-  to it, and never introduce editor-specific config changes as a side effect of an unrelated task.
-- `src/test/resources/logs/*.log` (`debugLogs.log`, `informativeLogs.log`, `traceLogs.log`) are
-  runtime-generated Log4j2 output, not source files to edit by hand.
+  or commit files under it; let `clean`/builds manage it. This includes the Log4j2 runtime logs at
+  `target/logs/informative.log`, `target/logs/debug.log`, and `target/logs/trace.log` — they are not
+  source files to edit by hand.
+- `.gitignore` now ignores the entire `.idea/` directory, so newly generated IntelliJ metadata is
+  untracked. Files already committed before this change (e.g. `.idea/vcs.xml`) remain tracked
+  regardless — avoid unrelated edits to them, and never introduce editor-specific config changes
+  as a side effect of an unrelated task.
 
 ## Implemented vs. roadmap — do not conflate
 
