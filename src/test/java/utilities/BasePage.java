@@ -42,7 +42,7 @@ public abstract class BasePage {
 
     public abstract void verifyPage();
 
-    private WebDriverWait getWait() {
+    protected WebDriverWait getWait() {
         return new WebDriverWait(getDriver(), Duration.ofSeconds(this.timeOut));
     }
 }

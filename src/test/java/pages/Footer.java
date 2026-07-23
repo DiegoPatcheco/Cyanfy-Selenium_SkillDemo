@@ -1,5 +1,6 @@
 package pages;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import utilities.BasePage;
@@ -14,6 +15,8 @@ public class Footer extends BasePage {
 
     @Override
     public void verifyPage() {
+        Assertions.assertTrue(find(subscriptionLabel).isDisplayed(),
+                "The subscription section should be visible");
     }
 
     public void moveToFooter() {
