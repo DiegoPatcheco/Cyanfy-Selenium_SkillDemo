@@ -61,7 +61,7 @@ jobs:
         run: >-
           ./mvnw --batch-mode --no-transfer-progress clean test
           -Dtest=RunTests
-          "-Dcucumber.filter.name=.*verify.the.login.page.*"
+          "-Dcucumber.filter.tags=@smoke"
           -Dbrowser=chrome
           -DexecutionMode=local
           -Dheadless
