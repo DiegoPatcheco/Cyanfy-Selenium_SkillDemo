@@ -2,22 +2,26 @@ package data;
 
 import models.Credential;
 
-import java.util.Map;
-
 public class DataGiver {
-    private static Map<String, Credential> getCredentialMap() {
-        return JsonReader.getCredentialsMap().getMapCredentials();
-    }
+    private static final String TEST_EMAIL_ENV = "CYANFY_TEST_EMAIL";
+    private static final String TEST_PASSWORD_ENV = "CYANFY_TEST_PASSWORD";
 
     public static Credential getValidCredentials() {
-        return getCredentialMap().get("valid");
+        return new Credential(
+                requireEnvironmentVariable(TEST_EMAIL_ENV),
+                requireEnvironmentVariable(TEST_PASSWORD_ENV)
+        );
     }
 
-    public static Credential getLockedCredentials() {
-        return getCredentialMap().get("locked");
-    }
+    private static String requireEnvironmentVariable(String variableName) {
+        final var value = System.getenv(variableName);
 
-    public static Credential getUnexistentCredentials() {
-        return getCredentialMap().get("unexistent");
+        if (value == null || value.isBlank()) {
+            throw new IllegalStateException(
+                    String.format("Required environment variable %s is not configured", variableName)
+            );
+        }
+
+        return value;
     }
 }

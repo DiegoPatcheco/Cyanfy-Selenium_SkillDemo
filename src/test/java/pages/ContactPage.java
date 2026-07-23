@@ -5,14 +5,12 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.BasePage;
 
 import java.io.File;
-import java.time.Duration;
 
 public class ContactPage extends BasePage {
-    private final By contactUsTitle = By.xpath("//h2[text()='Contact ']");
+    private final By contactUsTitle = By.cssSelector(".contact-form h2.title");
     private final By nameInput = By.cssSelector("input[data-qa='name']");
     private final By emailInput = By.cssSelector("input[data-qa='email']");
     private final By subjectInput = By.cssSelector("input[data-qa='subject']");
@@ -29,7 +27,7 @@ public class ContactPage extends BasePage {
     @Override
     public void verifyPage() {
         Assertions.assertAll(
-                () -> Assertions.assertTrue(find(contactUsTitle).isDisplayed()),
+                () -> Assertions.assertEquals("GET IN TOUCH", find(contactUsTitle).getText()),
                 () -> Assertions.assertTrue(find(nameInput).isDisplayed()),
                 () -> Assertions.assertTrue(find(emailInput).isDisplayed()),
                 () -> Assertions.assertTrue(find(subjectInput).isDisplayed()),
@@ -52,9 +50,7 @@ public class ContactPage extends BasePage {
     }
 
     public void confirmSuccessMessage() {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
-
-        final var confirm = (Alert) wait.until(ExpectedConditions.alertIsPresent());
+        final Alert confirm = getWait().until(ExpectedConditions.alertIsPresent());
         confirm.accept();
 
         Assertions.assertEquals("Success! Your details have been submitted successfully.",

@@ -25,7 +25,7 @@ public class Logs {
     }
 
     public static void warning(String message) {
-        log.fatal(message);
+        log.warn(message);
     }
 
     public static void fatal(String message) {

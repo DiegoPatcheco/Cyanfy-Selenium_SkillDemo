@@ -3,7 +3,7 @@ Feature: Login
   Background: Login feature precondition
     Given The user navigates to Login page
 
-  @regression
+  @smoke @regression
   Scenario: As a user, I want to verify the login page
     Then The user verifies both sign up & login forms
 

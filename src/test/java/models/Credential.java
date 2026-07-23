@@ -1,14 +1,13 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class Credential {
-    @JsonProperty("email")
-    private String email;
-    @JsonProperty("password")
-    private String password;
-    @JsonProperty("message")
-    private String message;
+    private final String email;
+    private final String password;
+
+    public Credential(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;
@@ -16,9 +15,5 @@ public class Credential {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

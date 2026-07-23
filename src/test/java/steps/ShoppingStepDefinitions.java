@@ -33,7 +33,7 @@ public class ShoppingStepDefinitions {
 
     @Then("The user clicks on Here link and navigates to products page")
     public void userClicksHereLink() {
-        cartPage.clickBuyProductsLinkTest();
+        cartPage.clickBuyProductsLink();
         productsPage.waitPageLoad();
     }
 

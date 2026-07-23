@@ -2,20 +2,15 @@ package pages;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.BasePage;
-
-import java.time.Duration;
-import java.util.List;
 
 public class CartPage extends BasePage {
     private final By emptyCartLabel = By.id("empty_cart");
-    private final By shoppingCartTitle = By.className("active");
+    private final By shoppingCartTitle = By.cssSelector("li.active");
     private final By buyProductsLink = By.cssSelector("a[href='/products']");
     private final By itemsList = By.cssSelector("tr[id]");
-    private List<WebElement> itemsLocatorList;
+    private final By removeItemButtons = By.cssSelector("a.cart_quantity_delete");
 
     @Override
     public void waitPageLoad() {
@@ -24,31 +19,27 @@ public class CartPage extends BasePage {
 
     @Override
     public void verifyPage() {
+        Assertions.assertEquals("Shopping Cart", find(shoppingCartTitle).getText(),
+                "The Shopping Cart breadcrumb should identify the current page");
     }
 
-    public void clickBuyProductsLinkTest() {
+    public void clickBuyProductsLink() {
         find(buyProductsLink).click();
     }
 
     public void verifyCartEmpty() {
-        final var wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
-        itemsLocatorList = findAll(itemsList);
-
-        if (!itemsLocatorList.isEmpty()) {
-            for (var i = 1; i < itemsLocatorList.size() + 1; i++) {
-                find(removeItemButtonDynamicLocator(i)).click();
-            }
+        while (!findAll(removeItemButtons).isEmpty()) {
+            final var previousItemCount = findAll(itemsList).size();
+            findAll(removeItemButtons).get(0).click();
+            getWait().until(ExpectedConditions.numberOfElementsToBeLessThan(itemsList, previousItemCount));
         }
 
-        final var label = wait.until(ExpectedConditions.visibilityOfElementLocated(emptyCartLabel));
-        Assertions.assertTrue(label.isDisplayed());
+        final var label = getWait().until(ExpectedConditions.visibilityOfElementLocated(emptyCartLabel));
+        Assertions.assertTrue(label.isDisplayed(), "The empty cart message should be visible");
     }
 
     public void verifyTotalCartItems(int expectedTotalItems) {
-        Assertions.assertEquals(expectedTotalItems, findAll(itemsList).size());
-    }
-
-    private By removeItemButtonDynamicLocator(int itemId) {
-        return By.cssSelector(String.format("a[data-product-id='%d']", itemId));
+        Assertions.assertEquals(expectedTotalItems, findAll(itemsList).size(),
+                "The cart should contain the expected number of products");
     }
 }

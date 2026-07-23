@@ -6,78 +6,60 @@ import org.jsoup.Jsoup;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class FileManager {
-    private final static String screenshotPath = "src/test/resources/screenshots";
-    private final static String pageStructurePath = "src/test/resources/pageStructure";
+    private static final Path EVIDENCE_PATH = Path.of("target", "evidence");
+    private static final Path SCREENSHOT_PATH = EVIDENCE_PATH.resolve("screenshots");
+    private static final Path PAGE_SOURCE_PATH = EVIDENCE_PATH.resolve("page-source");
+    private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS");
 
-    public static void getScreenshot(String screenshotName) {
-        Logs.debug("Taking screenshot");
+    public static void captureFailureEvidence(Scenario scenario) {
+        final var driver = new WebDriverProvider().get();
+        if (driver == null) {
+            Logs.warning("No hay un driver disponible para capturar evidencia de %s", scenario.getName());
+            return;
+        }
 
-        final var screenshotFile = ((TakesScreenshot) new WebDriverProvider().get())
-                .getScreenshotAs(OutputType.FILE);
-        final var path = String.format("%s/%s.png", screenshotPath, screenshotName);
+        final var evidenceName = buildEvidenceName(scenario.getName());
+        final var screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        final var pageSource = Jsoup.parse(driver.getPageSource()).toString();
 
         try {
-            FileUtils.copyFile(screenshotFile, new File(path));
-        } catch (IOException ioException) {
-            Logs.error("Error when taking the screenshot %s", ioException.getLocalizedMessage());
+            Files.createDirectories(SCREENSHOT_PATH);
+            Files.createDirectories(PAGE_SOURCE_PATH);
+            Files.write(SCREENSHOT_PATH.resolve(evidenceName + ".png"), screenshot);
+            Files.writeString(PAGE_SOURCE_PATH.resolve(evidenceName + ".html"), pageSource,
+                    StandardCharsets.UTF_8);
+        } catch (IOException exception) {
+            throw new IllegalStateException("Unable to persist failure evidence", exception);
         }
-    }
 
-    public static void attachScreenshot(Scenario scenario) {
-        final var screenShotFile = ((TakesScreenshot) new WebDriverProvider().get())
-                .getScreenshotAs(OutputType.BYTES);
-
-        scenario.attach(screenShotFile, "image/png", scenario.getName());
-    }
-
-    public static void getPageSource(String fileName) {
-        Logs.debug("Extracting page source from web page");
-        final var path = String.format("%s/page-source-%s.html", pageStructurePath, fileName);
-
-        try {
-            final var file = new File(path);
-
-            Logs.debug("Creating parent directories in case they don't exist");
-            if (file.getParentFile().mkdirs()) {
-                final var fileWritter = new FileWriter(file);
-                final var pageSource = new WebDriverProvider().get().getPageSource();
-                fileWritter.write(Jsoup.parse(pageSource).toString());
-                fileWritter.close();
-            }
-        } catch (IOException ioException) {
-            Logs.error("Error when getting the page source: %s", ioException.getLocalizedMessage());
-        }
-    }
-
-    public static void attachPageSource(Scenario scenario) {
-        final var pageSource = new WebDriverProvider().get().getPageSource();
-        final var parsedPageSource = Jsoup.parse(pageSource).toString();
-
-        scenario.attach(parsedPageSource, "text/plain", scenario.getName());
+        scenario.attach(screenshot, "image/png", evidenceName);
+        scenario.attach(pageSource, "text/html", evidenceName);
     }
 
     public static void deletePreviousEvidence() {
         try {
             Logs.debug("Deleting previous evidence");
-            FileUtils.deleteDirectory(new File(screenshotPath));
-            FileUtils.deleteDirectory(new File(pageStructurePath));
-        } catch (IOException ioException) {
-            Logs.error("Error when deleting previous evidence: %s", ioException.getLocalizedMessage());
+            FileUtils.deleteDirectory(EVIDENCE_PATH.toFile());
+        } catch (IOException exception) {
+            Logs.error("Error when deleting previous evidence: %s", exception.getLocalizedMessage());
         }
     }
 
-    /*@Attachment(value = "failureScreenshot", type = "image/png")
-    public static byte[] getScreenshot() {
-        return ((TakesScreenshot) new WebDriverProvider().get()).getScreenshotAs(OutputType.BYTES);
+    private static String buildEvidenceName(String scenarioName) {
+        final var safeScenarioName = scenarioName
+                .replaceAll("[^a-zA-Z0-9._-]+", "-")
+                .replaceAll("(^-+|-+$)", "");
+        final var timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
+        final var uniqueId = UUID.randomUUID().toString().substring(0, 8);
+        return String.format("%s-%s-%s", safeScenarioName, timestamp, uniqueId);
     }
-
-    @Attachment(value = "pagesource", type = "text/html", fileExtension = "txt")
-    public static String getPageSource() {
-        return Jsoup.parse(new WebDriverProvider().get().getPageSource()).toString();
-    }*/
 }
