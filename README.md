@@ -1,6 +1,6 @@
 # Cyanfy Selenium BDD Automation
 
-[![CI](https://github.com/DiegoPatcheco/Cyanfy-Selenium_SkillDemo/actions/workflows/main_CI.yml/badge.svg)](https://github.com/DiegoPatcheco/Cyanfy-Selenium_SkillDemo/actions/workflows/main_CI.yml)
+[![CI](https://github.com/DiegoPatcheco/cyanfy-web-automation/actions/workflows/main_CI.yml/badge.svg)](https://github.com/DiegoPatcheco/cyanfy-web-automation/actions/workflows/main_CI.yml)
 
 Cyanfy is a portfolio project that demonstrates maintainable web BDD automation with Java,
 Selenium WebDriver, Cucumber, Gherkin, JUnit Platform, and Maven. The suite exercises the public
@@ -66,8 +66,8 @@ includes Maven Wrapper, and Selenium Manager resolves supported Chrome, Edge, an
 ## Clone and compile
 
 ```sh
-git clone https://github.com/DiegoPatcheco/Cyanfy-Selenium_SkillDemo.git
-cd Cyanfy-Selenium_SkillDemo
+git clone https://github.com/DiegoPatcheco/cyanfy-web-automation.git
+cd cyanfy-web-automation
 ```
 
 Linux/macOS:
