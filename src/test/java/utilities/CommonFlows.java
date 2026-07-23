@@ -6,8 +6,8 @@ import org.openqa.selenium.WebDriver;
 import pages.AccountInfoPage;
 import pages.ContactPage;
 import pages.HomePage;
+import pages.ItemDetailsPage;
 import pages.LoginPage;
-import pages.ProductsPage;
 import pages.TopBar;
 
 public class CommonFlows {
@@ -53,22 +53,14 @@ public class CommonFlows {
     }
 
     public void goToContactPage() {
-        goToLoginPage();
-        final var validCredentials = DataGiver.getValidCredentials();
-
-        new LoginPage().fillLoginForm(validCredentials.getEmail(), validCredentials.getPassword());
-        new HomePage().waitPageLoad();
+        goToHomePage();
+        new TopBar().waitPageLoad();
         new TopBar().clickContactButton();
         new ContactPage().waitPageLoad();
     }
 
     public void goToItemDetailsPage() {
-        goToLoginPage();
-        final var validCredentials = DataGiver.getValidCredentials();
-
-        new LoginPage().fillLoginForm(validCredentials.getEmail(), validCredentials.getPassword());
-        new HomePage().waitPageLoad();
-        new TopBar().clickProductsButton();
-        new ProductsPage().goItemDetails(1);
+        getDriver().get("https://www.automationexercise.com/product_details/1");
+        new ItemDetailsPage().waitPageLoad();
     }
 }

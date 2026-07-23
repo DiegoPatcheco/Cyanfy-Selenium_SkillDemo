@@ -89,7 +89,8 @@ equivalent script — use the PowerShell command above.
 - Every other scenario across all 5 feature files is `@regression` only, including the second
   Login scenario (actual sign-in), and all of SignUp, Contact, ItemReview, and Shopping.
 - `@regression` scenarios mutate the live external site: they can create accounts, submit contact
-  messages and reviews, and modify the configured account's cart.
+  messages and item reviews (both as unauthenticated, public flows), and modify the configured
+  account's cart via the authenticated Shopping flow.
 - CI (`.github/workflows/main_CI.yml`) only ever runs `@smoke`. Do not claim, imply, or configure
   a full `@regression` run inside GitHub Actions — no isolated CI test account exists yet (see
   Roadmap in README).
@@ -99,8 +100,10 @@ equivalent script — use the PowerShell command above.
 - Read exclusively via `data.DataGiver.getValidCredentials()`, which calls
   `System.getenv(...)` for both variables and throws `IllegalStateException` if either is null or
   blank. There is no fallback, default, or config-file source.
-- Required only for `@regression` scenarios that log in (Login's second scenario, Shopping,
-  ItemReview, Contact if it needs a session). `@smoke` never touches these variables.
+- Required only for `@regression` scenarios that log in: Login's second scenario and all of
+  Shopping (via `CommonFlows.loginToHomePage()`). Contact and ItemReview are unauthenticated,
+  public flows via `CommonFlows.goToContactPage()`/`goToItemDetailsPage()` and never read these
+  variables. `@smoke` never touches these variables either.
 - Never hardcode real credentials in code, feature files, commits, or shell history. Use a
   disposable test account. Never print these values in logs or command output.
 
@@ -157,11 +160,12 @@ equivalent script — use the PowerShell command above.
 - All scenarios run against the live `https://www.automationexercise.com/`; there is no local
   stub/mock, so results depend on that site's availability and content.
 - `@regression` scenarios are not isolated: SignUp creates a persistent external account that is
-  never deleted; Shopping/ItemReview/Contact reuse the single account from
-  `CYANFY_TEST_EMAIL`/`CYANFY_TEST_PASSWORD` and mutate shared external state (cart contents,
-  reviews, messages).
-- Do not assume parallel-safe execution of `@regression` scenarios — they share one external
-  account. `@smoke` has no such constraint since it only views the public login page.
+  never deleted; Shopping logs in and reuses the single account from
+  `CYANFY_TEST_EMAIL`/`CYANFY_TEST_PASSWORD`, mutating its cart contents. Contact and ItemReview
+  are unauthenticated public flows (no login, no shared account) but still mutate shared external
+  state by submitting a contact message or a product review with generated fake-account data.
+- Do not assume parallel-safe execution of `@regression` scenarios — Shopping scenarios share one
+  external account. `@smoke` has no such constraint since it only views the public login page.
 
 ## Coding / Page Object / BDD conventions
 
@@ -171,6 +175,10 @@ equivalent script — use the PowerShell command above.
 - Step definitions live in `steps/`, stay declarative, and delegate real logic to Page Objects or
   `CommonFlows`; do not put Selenium calls or assertions directly in step definition bodies beyond
   wiring the Gherkin phrase to a Page Object/CommonFlows call.
+- `CommonFlows.goToItemDetailsPage()` navigates directly to the stable public
+  `https://www.automationexercise.com/product_details/1` URL rather than clicking through header/
+  products-listing navigation, since the ItemReview scenarios target the details/review page
+  itself, not the navigation path to it.
 - Assertions use JUnit Jupiter (`org.junit.jupiter.api.Assertions`), including
   `Assertions.assertAll` for multi-condition checks (see `LoginPage.verifyPage`).
 - Logging goes through `utilities.Logs` (`debug`/`info`/`warning`/`error`), not
@@ -179,7 +187,8 @@ equivalent script — use the PowerShell command above.
   shared preconditions, tag every scenario with `@regression` and add `@smoke` only to scenarios
   safe to run without credentials and without external mutation.
 - Test data generation uses `com.github.javafaker` (see `models.FakeAccount`) for non-authenticated
-  flows like SignUp; authenticated credentials always come from `DataGiver`, never generated.
+  flows like SignUp, Contact, and ItemReview; authenticated credentials always come from
+  `DataGiver`, never generated.
 
 ## Validation requirements before considering work done
 

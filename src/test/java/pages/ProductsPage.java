@@ -58,11 +58,6 @@ public class ProductsPage extends BasePage {
         }
     }
 
-    public void goItemDetails(int itemId) {
-        final var viewProductButton = find(viewProductButtonDynamicLocator(itemId));
-        new Actions(getDriver()).scrollToElement(viewProductButton).moveToElement(viewProductButton).click().perform();
-    }
-
     public void verifyItemsPrice(String itemName, int expectedPrice) {
         final var productCard = findAll(productCards).stream()
                 .filter(card -> card.findElement(productName).getText().equals(itemName))
@@ -73,7 +68,4 @@ public class ProductsPage extends BasePage {
         Assertions.assertEquals(expectedPrice, price, "The product price should match the catalog expectation");
     }
 
-    private By viewProductButtonDynamicLocator(int itemId) {
-        return By.cssSelector(String.format("a[href='/product_details/%d']", itemId));
-    }
 }
