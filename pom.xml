@@ -23,7 +23,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
                     <properties>
                         <configurationParameters>
                             cucumber.junit-platform.naming-strategy=long
@@ -68,7 +67,7 @@
                             <!-- optional, set true to get a final report with latest results of the same test from different test runs -->
                             <mergeFeaturesWithRetest>false</mergeFeaturesWithRetest>
                             <!-- optional, set true to fail build on test failures -->
-                            <checkBuildResult>false</checkBuildResult>
+                            <checkBuildResult>true</checkBuildResult>
                         </configuration>
                     </execution>
                 </executions>

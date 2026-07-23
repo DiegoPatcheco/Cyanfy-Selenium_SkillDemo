@@ -10,6 +10,15 @@ public class Credential {
     @JsonProperty("message")
     private String message;
 
+    public Credential() {
+    }
+
+    public Credential(String email, String password, String message) {
+        this.email = email;
+        this.password = password;
+        this.message = message;
+    }
+
     public String getEmail() {
         return email;
     }

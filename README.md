@@ -31,6 +31,21 @@ Before setting up the project, ensure you have the following installed:
    ```
 
 ## Running Tests
+The login scenarios require credentials supplied through environment variables. Never commit real
+credentials to the repository.
+
+On Linux or macOS:
+```sh
+export CYANFY_TEST_EMAIL="your-test-account@example.com"
+export CYANFY_TEST_PASSWORD="your-test-password"
+```
+
+On Windows PowerShell:
+```powershell
+$env:CYANFY_TEST_EMAIL = "your-test-account@example.com"
+$env:CYANFY_TEST_PASSWORD = "your-test-password"
+```
+
 To execute the automated tests, use the following command:
 ```sh
 ./mvnw clean test
